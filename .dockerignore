@@ -1,0 +1,30 @@
+# directories
+.git
+.mypy_cache
+.pytest_cache
+.tox
+.venv
+.vscode
+**/lost+found
+htmlcov
+k8s
+public
+# files
+.coverage
+.dockerignore
+.editorconfig
+.env
+.env_template
+.gitignore
+.gitlab-ci.yml
+.pre-commit-config.yaml
+*.md
+**/LICENSE*
+**/README*
+Dockerfile
+Makefile
+pyproject.toml
+requirements/*.in
+requirements/common.txt
+setup.cfg
+uwsgiconf/local.ini

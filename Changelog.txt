@@ -1,0 +1,93 @@
+
+Changelog 24/03/22
+
+fe-src/dev-server/my-cms-example-entrypoint.html
+Aggiunto template d'esempio per il devserver nel caso di integrazione cms
+
+fe-src/dev-server/my-simple-example-entrypoint.html
+Aggiunto template d'esempio per il devserver nel caso di integrazione semplice
+
+fe-src/dev-server/home.html → fe-src/dev-server/my-spa-example-entrypoint.html
+Modificato template d'esempio per il devserver nel caso di integrazione spa
+
+fe-src/scss/_spacing.scss,
+fe-src/scss/_typography.scss,
+modificato per utilizzo variabile mountpoint scss
+
+fe-src/scss/_variables.scss
+Inserito l'id del mount point come variabile scss
+
+fe-src/scss/common.scss
+Iniettato l'id del mount point come variabile css
+
+fe-src/src/views/home/home-cmp.vue → fe-src/src/components/my-spa-example.vue
+Modificato componente d'esempio e spostato nella cartella corretta
+
+fe-src/src/views/home.js → fe-src/src/helpers/common-views-initializer.js
+Trasformata view principale in file di supporto alle view contenente tutti gli import comuni ed il codice condivisibile fra gli entrypoint js
+
+fe-src/src/helpers/load-components.js
+Aggiunto file di supporto js per registrazione automatica di tutti i componenti a livello globale e chunking automatico
+
+fe-src/src/helpers/utils.js
+aggiunta una funzione di supporto per ricavare l'id del mount point
+
+fe-src/src/helpers/vue_djangocms_patch.js
+Aggiunta patch per garantire il corretto funzionamento di vue con django cms
+
+fe-src/src/mixins/cms-entrypoints.js
+Aggiunto mixin di supporto per integrazione con cms da modificare di volta in volta per l'integrazione
+
+fe-src/src/views/my-cms-example-entrypoint.js
+Aggiunto entrypoint d'esempio per lo sviluppo con cms
+
+fe-src/src/views/my-simple-example-entrypoint.js
+Aggiunto entrypoint d'esempio per lo sviluppo con integrazione semplice
+
+fe-src/src/views/my-spa-example-entrypoint.js
+Aggiunto entrypoint d'esempio per lo sviluppo con integrazione spa
+
+fe-src/src/spa
+Aggiunta una nuova cartella spa con lo scopo di contenere le cartelle per ogni spa realizzata
+
+fe-src/src/spa/my-spa-example/*
+Aggiunta esempio di implementazione spa
+
+templates/project/base.html
+Rimosso webpack loader, modificato blocco css,
+
+templates/project/base_site.html
+Aggiunto webpack loader, modificato blocco css, aggiunta integrazione base seo, jsonld, aggiornato contenuto del blocco bodycontent in ottica di integrazione con vue
+
+templates/project/base_site_no_vue.html
+Aggiunto template da utilizzare con django senza l'integrazione con vue
+
+templates/project/base_site_cms.html
+Modificato template per rispecchiare ultime integrazioni fra vue e django cms
+
+templates/project/base_site_cms_no_vue.html
+Aggiunto template da utilizzare con django cms senza l'integrazione con vue
+
+templates/project/home/index.html
+Aggiunto v-cloak
+
+templates/apphooks/app_hook_seo_meta_example.html
+Esempio cms template per apphook con gestione seo
+
+templates/cms_templates/custom_entrypoint_example_template.html
+Esempio cms template per gestione custom entrypoint
+
+vue.config.js
+Aggiornamento configurazione per gestione corretta ordine js in devserver
+Corretta integrazione autoimport
+Aggiornata gestione porte
+
+
+
+file rimossi e deprecati
+fe-src/dev-server/home.html
+fe-src/src/components/readme.md
+fe-src/src/views/home.js
+fe-src/src/views/home/home-cmp.vue
+fe-src/src/views/home/pages/index-cmp.vue
+fe-src/src/views/home/router.js

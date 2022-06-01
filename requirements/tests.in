@@ -1,0 +1,15 @@
+# pip-compile --output-file tests.txt tests.in
+-r common.in
+
+coverage~=5.3.0
+pre-commit~=2.9.0
+tox~=3.20.0
+
+faker
+freezegun
+factory_boy
+selenium
+model_bakery
+django_coverage_plugin
+feedparser
+text-unidecode==1.3

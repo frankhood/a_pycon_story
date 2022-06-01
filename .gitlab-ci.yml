@@ -1,0 +1,152 @@
+stages:
+- test
+- coverage
+- build
+- build_qcluster
+- deploy
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_TLS_CERTDIR: ""
+
+test:
+  stage: test
+  image: python:3.8
+  services:
+    - postgres:12
+  before_script:
+    - pip install -q -U pip~=20.3.0
+    - pip install tox
+  variables:
+    DATABASE_URL: "postgres://postgres:postgres@postgres:5432/a_pycon_story"
+    POSTGRES_PASSWORD: "postgres"
+  script:
+    - tox -e coverage,report,reporthtml
+  coverage: '/^TOTAL.*\s+(\d+\%)$/'
+  except:
+    - "server/stage"
+    - "server/prod"
+
+  artifacts:
+    paths:
+      - htmlcov
+    expire_in: 1 day
+
+pages:
+  stage: coverage
+  image: busybox
+  script:
+    - mv htmlcov public
+  artifacts:
+    paths:
+      - public
+  dependencies:
+    - test
+
+# build:
+#   stage: build
+#   image: docker:19-git
+#   services:
+#     - docker:19-dind
+#   before_script:
+#     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+#   script:
+#     - "CI_PROJECT_PATH_LOWER=$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]')"
+#     - "docker build -t $CI_REGISTRY/$CI_PROJECT_PATH_LOWER:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA --target prod --pull ."
+#     - "docker push $CI_REGISTRY/$CI_PROJECT_PATH_LOWER:$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA"
+#   after_script:
+#     - "docker logout $CI_REGISTRY"
+#   only:
+#     - develop
+#     - master
+
+# build_qcluster:
+#   stage: build_qcluster
+#   image: docker:19-git
+#   services:
+#     - docker:19-dind
+#   before_script:
+#     - "docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY"
+#   script:
+#     - "CI_PROJECT_PATH_LOWER=$(echo $CI_PROJECT_PATH | tr '[:upper:]' '[:lower:]')"
+#     - "docker build -t $CI_REGISTRY/$CI_PROJECT_PATH_LOWER:QCLUSTER-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA --target prod --pull ."
+#     - "docker push $CI_REGISTRY/$CI_PROJECT_PATH_LOWER:QCLUSTER-$CI_COMMIT_REF_NAME-$CI_COMMIT_SHA"
+#   after_script:
+#     - "docker logout $CI_REGISTRY"
+#   only:
+#     - develop
+#     - master
+
+# .deploy:
+#   stage: deploy
+#   image:
+#     name: bitnami/kubectl:1.17
+#     entrypoint: [""]
+#   before_script:
+#     - kubectl config set-cluster my-cluster --server=${KUBE_URL} --certificate-authority="${KUBE_CA_PEM_FILE}"
+#     - kubectl config set-credentials admin --token=${KUBE_TOKEN}
+#     - kubectl config set-context my-context --cluster=my-cluster --user=admin --namespace=default
+#     - kubectl config use-context my-context
+
+# deploy_development:
+#   extends: .deploy
+#   only:
+#     - develop
+#   environment: development
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/develop-$CI_COMMIT_SHA/" k8s/development/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-develop-$CI_COMMIT_SHA/" k8s/development/1_backend.yaml
+#     - kubectl apply -f k8s/development/
+
+# rollback_development:
+#   extends: .deploy
+#   only:
+#     - develop
+#   environment: development
+#   when: manual
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/develop-$CI_COMMIT_BEFORE_SHA/" k8s/development/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-develop-$CI_COMMIT_SHA/" k8s/development/1_backend.yaml
+#     - kubectl apply -f k8s/development/
+
+# deploy_integration:
+#   extends: .deploy
+#   only:
+#     - master
+#   environment: integration
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/master-$CI_COMMIT_SHA/" k8s/integration/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-master-$CI_COMMIT_SHA/" k8s/integration/1_backend.yaml
+#     - kubectl apply -f k8s/integration/
+
+# rollback_integration:
+#   extends: .deploy
+#   only:
+#     - master
+#   environment: integration
+#   when: manual
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/master-$CI_COMMIT_BEFORE_SHA/" k8s/integration/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-master-$CI_COMMIT_SHA/" k8s/integration/1_backend.yaml
+#     - kubectl apply -f k8s/integration/
+
+# deploy_production:
+#   extends: .deploy
+#   only:
+#     - tags
+#   environment: production
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/master-$CI_COMMIT_SHA/" k8s/production/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-master-$CI_COMMIT_SHA/" k8s/production/1_backend.yaml
+#     - kubectl apply -f k8s/production/
+
+# rollback_production:
+#   extends: .deploy
+#   only:
+#     - tags
+#   environment: production
+#   when: manual
+#   script:
+#     - sed -i "s/__IMAGE_TAG__/master-$CI_COMMIT_BEFORE_SHA/" k8s/production/1_backend.yaml
+#     - sed -i "s/__IMAGE_TAG_QCLUSTER__/QCLUSTER-master-$CI_COMMIT_SHA/" k8s/production/1_backend.yaml
+#     - kubectl apply -f k8s/production/

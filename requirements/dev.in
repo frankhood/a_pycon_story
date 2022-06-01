@@ -1,0 +1,21 @@
+# pip-compile --output-file dev.txt dev.in
+-r tests.in
+
+django-extensions~=3.1.0
+cookiecutter~=1.7.0
+ipdb~=0.13.0
+jedi~=0.17.0
+pydot~=1.4.0
+pytest-django~=4.1.0
+pyupgrade~=2.7.0
+rope~=0.18.0
+uwsgi~=2.0.0
+invoke
+coverage
+isort
+flake8
+
+-e git+https://github.com/frankhood/django-self-aware-model.git@0.1.0#egg=self-aware-model
+-e git+https://github.com/frankhood/django-templatetag-toolkit.git@0.1.1#egg=templatetag-toolkit
+
+

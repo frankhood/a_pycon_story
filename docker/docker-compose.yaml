@@ -1,0 +1,68 @@
+version: "3.4"
+services:
+  
+  postgres:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    container_name: a_pycon_story_postgres
+    environment:
+      - POSTGRES_DB=${DATABASE_NAME}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_USER=${DATABASE_USER}
+    image: postgres:12
+    volumes:
+      - pg_data:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 127.0.0.1:${DB_EXPOSE_PORT:-3307}:5432
+  
+
+  backend:
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+        window: 120s
+    image: a_pycon_story/code
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+      target: dev
+    container_name: a_pycon_story_backend
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      - DATABASE_URL=postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME}
+      - DJANGO_ALLOWED_HOSTS=${DJANGO_ALLOWED_HOSTS}
+      - DJANGO_CONFIGURATION=${DJANGO_CONFIGURATION}
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DJANGO_DEFAULT_FROM_EMAIL=${DJANGO_DEFAULT_FROM_EMAIL}
+      - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY}
+      - DJANGO_SERVER_EMAIL=${DJANGO_SERVER_EMAIL}
+      - DJANGO_REST_FRAMEWORK_DEBUG=True
+      - EMAIL_URL=${EMAIL_URL}
+      - EXPOSE_PORT=${EXPOSE_PORT:-8030}
+    volumes:
+      - ..:/app
+      - ~/.gitconfig:/etc/gitconfig
+      - ~/.ssh:/root/.ssh
+    command: "./docker/entrypoint_dev.sh"
+    ports:
+      - 127.0.0.1:${EXPOSE_PORT:-8030}:${EXPOSE_PORT:-8030}
+
+volumes:
+  
+  pg_data: {
+    "name": "a_pycon_story_pg_data"
+  }

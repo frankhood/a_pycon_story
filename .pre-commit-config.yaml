@@ -1,0 +1,87 @@
+default_language_version:
+    python: python3
+fail_fast: true
+
+exclude: |
+  (?x)^(
+      .*?src/.* |
+      .*?/migrations/.* |
+      .*?/factories\.py |
+      .*?/?__pycache__/.* |
+      .git/.* |
+      .mypy_cache/.* |
+      .pytest_cache/.* |
+      .tox/.* |
+      .venv/.* |
+      .vscode/.* |
+      node_modules/.* |
+      fh_app_template/.*
+  )$
+
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1  # Use the ref you want to point at
+    hooks:
+    - id: check-merge-conflict
+      name: "🫣  Checking Merge Conflict"
+  - repo: https://github.com/psf/black
+    rev: 22.3.0
+    hooks:
+    - id: black
+      name: "🫡  Black Reformatting"
+      exclude: ^.*\b(migrations)\b.*$
+  - repo: https://github.com/PyCQA/autoflake
+    rev: v1.4
+    hooks:
+    - id: autoflake
+      name: "🫡  Autoflake Reformatting"
+      language: python
+      'types': [python]
+      require_serial: true
+      exclude: ^.*\b(migrations)\b.*$
+      entry: autoflake
+      args:
+        - "--ignore-init-module-imports"
+        - "--remove-all-unused-imports"
+        - "--in-place"
+        - "--remove-unused-variables"
+  - repo: https://github.com/PyCQA/flake8
+    rev: 3.8.0
+    hooks:
+    - id: flake8
+      name: "🤯 Flake8 Validation"
+  - repo: https://github.com/PyCQA/isort
+    rev: 5.7.0
+    hooks:
+    - id: isort
+      name: "🤯 Isort Validation"
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v0.931
+    hooks:
+    - id: mypy
+      name: "🥸  Mypy Validation"
+      additional_dependencies:
+        - types-requests
+        - types-freezegun
+        - types-python-dateutil
+        - types-pytz
+  - repo: https://github.com/frankhood/pre-commit-hooks-django-migrations
+    rev: 0.1.5
+    hooks:
+      - id: makemigrations-check-absent
+        name: "👾 Check for absent migrations"
+  - repo: https://github.com/ecugol/pre-commit-hooks-django
+    rev: v0.4.0
+    hooks:
+      - id: check-unapplied-migrations
+        name: "👾 Check for unapplied migrations"
+        entry: python manage.py migrate --check
+  - repo: local
+    hooks:
+    - id: django-test
+      name: "😷 Django Testing"
+      entry: python manage.py test --no-input --configuration=Testing
+      always_run: true
+      verbose: true
+      pass_filenames: false
+      language: system
