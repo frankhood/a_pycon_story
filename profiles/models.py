@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 from django.contrib.auth.models import AbstractUser
-from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 
 logger = logging.getLogger(__name__)
 

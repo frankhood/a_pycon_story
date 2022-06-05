@@ -11,7 +11,7 @@ import logging
 
 from django.core.management import call_command
 from django.core.management.base import BaseCommand
-from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 
 logger = logging.getLogger(__name__)
 

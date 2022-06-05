@@ -223,7 +223,7 @@ class StorageSettings(object):
 
 class DjangoCMSSettings(object):
 
-    from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+    from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 
     # Django-CMS settings
     """

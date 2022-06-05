@@ -4,7 +4,7 @@ from __future__ import absolute_import, print_function, unicode_literals
 import logging
 
 from django.db import models
-from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 from django_extensions.db.models import TimeStampedModel
 from self_aware_model.models import SelfAwareModelMixin
 from slug_model_mixin.model_mixins import SlugModelMixin

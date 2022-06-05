@@ -5,7 +5,7 @@ import logging
 
 import factory
 import pytz
-from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 
 from . import models
 

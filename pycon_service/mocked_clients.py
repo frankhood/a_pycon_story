@@ -30,21 +30,21 @@ class FakeBaseAdultUserClient:
         return UserBirthDateAdultFactory()
 
 
-class MockedRequestDataErrorClient:
+class FakeRequestDataErrorClient:
     def get_user_birth_date(self, remote_user_id: str) -> NoReturn:
         raise api_exceptions.RequestDataErrorException("Exception")
 
 
-class MockedUnauthorizedRequestClient:
+class FakeUnauthorizedRequestClient:
     def get_user_birth_date(self, remote_user_id: str) -> NoReturn:
         raise api_exceptions.UnauthorizedRequestException("Exception")
 
-
-class MockedUnexpectedResponseClient:
+ 
+class FakeUnexpectedResponseClient:
     def get_user_birth_date(self, remote_user_id: str) -> NoReturn:
         raise api_exceptions.UnexpectedResponseException("Exception")
 
 
-class MockedUnexpectedExceptionClient:
+class FakeUnexpectedExceptionClient:
     def get_user_birth_date(self, remote_user_id: str) -> NoReturn:
         raise Exception("Exception")

@@ -2,7 +2,7 @@
 from __future__ import absolute_import, unicode_literals
 
 from django.apps.config import AppConfig
-from django.utils.translation import ugettext, ugettext_lazy as _  # noqa
+from django.utils.translation import ugettext, gettext_lazy as _  # noqa
 
 
 class ProfilesConfig(AppConfig):
